@@ -1,0 +1,6 @@
+{
+  "name": "Tbeep",
+  "tagline": "App Android con geolocalizacion de puntos de recarga tarjeta bip y consulta de saldo ",
+  "body": "# Tbeep\r\n\r\n## Que es Tbeep?\r\n\r\n### Tbeep es una simple Aplicación para dispositivos con Sistema Operativo Android, con la cual se puede hacer consultas de saldo de las tarjetas de pago para el servicio de Transporte Publico en Chile(Tarjeta Bip!), ademas de consultar atraves de Geolocalizacion y mapas el punto de recarga mas cercano a su ubicacion.\r\n\r\n### Splash de la app\r\n![Splash](http://res.cloudinary.com/accecar/image/upload/v1469588805/Screenshot_2016-07-26-19-16-51_h53cbv.png)\r\n\r\n### Bienvenida\r\n![Bienvenida](http://res.cloudinary.com/accecar/image/upload/v1469588811/Screenshot_2016-07-26-19-17-13_cuvytm.png)\r\n\r\n### Consulta de Saldo\r\n![Consulta de Saldo](http://res.cloudinary.com/accecar/image/upload/v1469588816/Screenshot_2016-07-26-19-17-41_fqvmiu.png)\r\n\r\n### Geolocalizacion\r\n![Geolocalizacion](http://res.cloudinary.com/accecar/image/upload/v1469588822/Screenshot_2016-07-26-19-18-17_idbk05.png)\r\n\r\n\r\n\r\n## Se esta trabajando para integrar nuevas funcionalizades a la app.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
