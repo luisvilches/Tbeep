@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Tbeep!</string>
+    <string name="title_activity_maps">Tbeep!</string>
+    <string name="title_activity_splash">Tbeep!</string>
+    <string name="puntos_de_recarga">Puntos de Recarga</string>
+    <string name="consultar_saldo">Consultar Saldo</string>
+    <string name="title_activity_config">Preferencias</string>
+    <string name="agregar_tarjeta">Agregar tarjeta</string>
+
+</resources>

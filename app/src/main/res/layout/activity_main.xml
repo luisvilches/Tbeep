@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#f8f8f8"
+    tools:context="luisvilches.cl.tbip.MainActivity">
+
+    <TabHost
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tabHost"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/TabInicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="446dp"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="49dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:indeterminate="true"
+                        android:id="@+id/barra"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="0dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tuSaldo"
+                        android:textSize="20dp"
+                        android:textColor="#3498db"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="0dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:id="@+id/textSaldo"
+                        android:textAlignment="center"
+                        android:textColor="#3498db"
+                        android:layout_above="@+id/editText"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="70dp"
+                        android:inputType="number"
+                        android:ems="10"
+                        android:id="@+id/editText"
+                        android:textAlignment="center"
+                        android:textColor="#3498db"
+                        android:layout_above="@+id/button2"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/saldo"
+                        android:paddingLeft="15dp"
+                        android:text="@string/consultar_saldo"
+                        android:id="@+id/button2"
+                        android:onClick="onConsultar"
+                        android:textColor="#f8f8f8"
+                        android:layout_above="@+id/button"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/holo_blue_light"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/marcador"
+                        android:paddingLeft="15dp"
+                        android:text="@string/puntos_de_recarga"
+                        android:id="@+id/button"
+                        android:onClick="onMaps"
+                        android:textColor="#f8f8f8"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/design_textinput_error_color_dark"
+                        android:contextClickable="false"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/TabMisTarjetas"
+                    android:layout_width="match_parent"
+                    android:layout_height="446dp"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ListTarjetas">
+                    </ListView>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/agregar_tarjeta"
+                        android:onClick="onActivitySave"
+                        android:background="@android:color/holo_red_light"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</RelativeLayout>
