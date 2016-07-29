@@ -154,7 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             CameraUpdate center;
             center = CameraUpdateFactory.newLatLng(new LatLng(locationGPS.getLatitude(), locationGPS.getLongitude()));
             CameraUpdate zoom = CameraUpdateFactory.zoomTo(17);
-            mMap.moveCamera(center);
+           // mMap.moveCamera(center);
             mMap.animateCamera(zoom);
             mMap.setMyLocationEnabled(true);
         }

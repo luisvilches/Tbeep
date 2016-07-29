@@ -52,7 +52,10 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".IngresarBip" />
-        <activity android:name=".NotConexion"></activity>
+        <activity
+            android:name=".SinConexion"
+            android:label="@string/title_activity_sin_conexion"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

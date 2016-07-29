@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.EditText;
 
+import java.util.ArrayList;
 import java.util.jar.Attributes;
 
 /**
@@ -18,11 +19,13 @@ public class DataBaseManager {
     public static final String ID ="_id";
     public static final String NAME = "name";
     public static final String CODE = "code";
+    public static final String SALDO = "saldo";
 
     public static final String CREATE_TABLE = "CREATE TABLE " +TABLE_NAME+ " ("
             + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + NAME + " TEXT NOT NULL,"
-            + CODE + " TEXT NOT NULL);";
+            + CODE + " TEXT NOT NULL,"
+            + SALDO +" TEXT);";
 
     private DbHelper helper;
     private SQLiteDatabase db;
@@ -33,40 +36,58 @@ public class DataBaseManager {
     }
 
     private ContentValues generarContentValues(String name,String codigo){
-
         ContentValues valores = new ContentValues();
         valores.put(NAME,name);
         valores.put(CODE,codigo);
+        valores.put(SALDO,"$0");
 
         return valores;
     }
 
     public void insertar (String name, String codigo){
 
-        if (db==null)
-            createDb();
-
         db.insert(TABLE_NAME,null,generarContentValues(name,codigo));
     }
 
-    public void eliminar (String name){
+    public void eliminar(String id){
 
-        db.delete(TABLE_NAME,NAME+"?",new String[]{name});
+        db.execSQL("DELETE FROM tarjetas WHERE _id="+id);
+
+
     }
 
-    public void eliminarMultiple(String name1,String name2){
+    public void actualizarSaldo(String saldo, String id){
 
-        db.delete(TABLE_NAME,NAME+"IN (?,?)",new String[] {name1,name2});
+        db.execSQL("UPDATE tarjetas SET saldo='"+saldo+ "' WHERE _id="+id);
     }
 
     public Cursor cargarCursorTarjetas(){
 
-        String[] columnas = new String[] {ID,NAME,CODE};
+        String[] columnas = new String[] {ID,NAME,CODE,SALDO};
 
         return db.query(TABLE_NAME,columnas,null,null,null,null,null);
     }
 
-    public void createDb(){
-        db.execSQL(DataBaseManager.CREATE_TABLE);
+
+    public void close(){
+        helper.close();
+    }
+
+    public ArrayList<Tarjeta> selectAllTarjetas() {
+
+        ArrayList<Tarjeta> listaDeTarjetas = new ArrayList<Tarjeta>();
+        Cursor c = cargarCursorTarjetas();
+        if (c.moveToFirst()) {
+            do {
+                Tarjeta tarjeta = new Tarjeta(c.getString(1),c.getString(3));
+
+                listaDeTarjetas.add(tarjeta);
+
+            }while (c.moveToNext());
+        }
+        c.close();
+        helper.close();
+
+        return listaDeTarjetas;
     }
 }

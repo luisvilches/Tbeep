@@ -6,5 +6,6 @@
     <string name="consultar_saldo">Consultar Saldo</string>
     <string name="title_activity_config">Preferencias</string>
     <string name="agregar_tarjeta">Agregar tarjeta</string>
+    <string name="title_activity_sin_conexion">SinConexion</string>
 
 </resources>
