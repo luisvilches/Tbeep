@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textSaldo,status;
     EditText tarjeta;
-    String objeto,url1,data,RegDelete,idDelete,UpdateSaldo,UpdateId,UpdateNombre,UpdateCodigo,saldoActualizado,obj;
+    String objeto,url1,data,RegDelete,idDelete,UpdateSaldo,UpdateId,UpdateNombre,UpdateCodigo;
+    String url2 = "http://bip-servicio.herokuapp.com/api/v1/solicitudes.json?bip=";
     JSONObject jsonObject;
     ProgressBar barra;
     DataBaseManager manager;
@@ -49,9 +50,6 @@ public class MainActivity extends AppCompatActivity {
     SimpleCursorAdapter adapter;
     String[] from;
     int[] to;
-    private JSONArray jsonArray;
-    Context context;
-    String url2 = "http://bip-servicio.herokuapp.com/api/v1/solicitudes.json?bip=";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -69,35 +67,9 @@ public class MainActivity extends AppCompatActivity {
         textSaldo = (TextView) findViewById(R.id.textSaldo);
         status = (TextView) findViewById(R.id.tuSaldo);
         barra = (ProgressBar) findViewById(R.id.barra);
+        list = (ListView) findViewById(R.id.ListTarjetas);
 
         comprobarConexion();
-
-        Resources res = getResources();
-
-        TabHost tabs = (TabHost) findViewById(R.id.tabHost);
-        tabs.setup();
-
-        TabHost.TabSpec spec = tabs.newTabSpec("tabinicio");
-        spec.setContent(R.id.TabInicio);
-        spec.setIndicator("Inicio");
-        tabs.addTab(spec);
-
-        spec = tabs.newTabSpec("tabmistarjetas");
-        spec.setContent(R.id.TabMisTarjetas);
-        spec.setIndicator("Mis Tarjetas");
-        tabs.addTab(spec);
-
-        tabs.setCurrentTab(0);
-
-        textSaldo.setText("Bienvenido!");
-        textSaldo.setTextSize(30);
-
-        manager = new DataBaseManager(this);
-
-        list = (ListView) findViewById(R.id.ListTarjetas);
-        new ConsultaEnSegundoPlano().execute(url2);
-        cargarList();
-
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -116,23 +88,9 @@ public class MainActivity extends AppCompatActivity {
         adapter = new SimpleCursorAdapter(this,R.layout.itemlist,cursor,from,to,0);
         list.setAdapter(adapter);
 
-        ///////////////////////////////////////////////////////////////////////////////////////
-        //////// LIST LISTENER CLICK
-        ///////////////////////////////////////////////////////////////////////////////////////
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-
-              // Cursor c = (Cursor) parent.getItemAtPosition(i);
-               //String text = c.getString(1);
-
-              // Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
-            }
-
-        });
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //////// LIST LISTENER CLICK
+    ///////////////////////////////////////////////////////////////////////////////////////
 
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -149,15 +107,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void cargarList2(){
-
-        from = new String[]{manager.NAME, manager.SALDO};
-        to = new int[]{R.id.textNombre, R.id.textNumero};
-        cursor = manager.cargarCursorTarjetas();
-
-        adapter = new SimpleCursorAdapter(this,R.layout.itemlist,cursor,from,to,0);
-        list.setAdapter(adapter);
-    }
     ////////////////////////////////////////////////////////////////////////
     ///DIALOGO PARA CONFIRMAR LA ELIMINACION DE UN REGISTRO DE TARJETA BIP
     ////////////////////////////////////////////////////////////////////////
@@ -199,10 +148,38 @@ public class MainActivity extends AppCompatActivity {
     ////////////////////////////////////////////////////////////////////////////////////
 
     public void comprobarConexion() {
+
         if (!Utils.isHayConexion(this)) {
-            Toast.makeText(this, "Sin Coneccion a Internet", Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(this, SinConexion.class);
             startActivity(intent);
+
+        }else{
+
+            Resources res = getResources();
+
+            TabHost tabs = (TabHost) findViewById(R.id.tabHost);
+            tabs.setup();
+
+            TabHost.TabSpec spec = tabs.newTabSpec("tabinicio");
+            spec.setContent(R.id.TabInicio);
+            spec.setIndicator("Inicio");
+            tabs.addTab(spec);
+
+            spec = tabs.newTabSpec("tabmistarjetas");
+            spec.setContent(R.id.TabMisTarjetas);
+            spec.setIndicator("Mis Tarjetas");
+            tabs.addTab(spec);
+
+            tabs.setCurrentTab(0);
+
+            textSaldo.setText("Bienvenido!");
+            textSaldo.setTextSize(30);
+
+            manager = new DataBaseManager(this);
+
+            new ConsultaEnSegundoPlano().execute(url2);
+            cargarList();
         }
     }
 
@@ -216,14 +193,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onActivitySave(View b) {
-
-        Intent intent = new Intent(this, IngresarBip.class);
-        startActivity(intent);
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////
+    ////// INSERTAR TARJETA EN LA BD
     //////////////////////////////////////////////////////////////////////////////////////////
+
     public void save(View view) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Datos nueva tarjeta");
@@ -243,20 +216,19 @@ public class MainActivity extends AppCompatActivity {
                 String nombre = nombreTarjeta.getText().toString();
                 String numero = numeroTarjeta.getText().toString();
 
-                String name = nombreTarjeta.getText().toString();
-                String codigo = numeroTarjeta.getText().toString();
+                if (numero.length() >= 8 && numero.length() <= 10) {
 
-                String saldo = "$0";
+                    manager.insertar(nombre, numero);
 
-                //DataBaseManager manager = new DataBaseManager(this);
-                manager.insertar(nombre,numero);
+                    nombreTarjeta.setText("");
+                    numeroTarjeta.setText("");
+                    new ConsultaEnSegundoPlano().execute(url2);
 
-                nombreTarjeta.setText("");
-                numeroTarjeta.setText("");
-                new ConsultaEnSegundoPlano().execute(url2);
+                    cargarList();
 
-                cargarList();
-
+                }else{
+                    Toast.makeText(getApplicationContext(),"Tarjeta Invalida",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -269,8 +241,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    //////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////////////////////////////////////////
     //////  FUNCION PARA LA CONSULTA DE SALDO DE CADA TARJETA BIP
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -289,13 +260,14 @@ public class MainActivity extends AppCompatActivity {
             new TareasAsincronas().execute(url1);
 
         } else {
+
             textSaldo.setText("Tarjeta Invalida");
             textSaldo.setTextSize(20);
             status.setText("Error:");
         }
-        ;
     }
-
+    /////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void onStart() {
         super.onStart();
@@ -335,12 +307,16 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////// INICIO TAREAS ASINCRONAS
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public class TareasAsincronas extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
-
         }
 
         @Override
@@ -386,11 +362,7 @@ public class MainActivity extends AppCompatActivity {
                                     UpdateCodigo = c.getString(2);
                                     UpdateSaldo = c.getString(3);
 
-                                    //Toast.makeText(getApplicationContext(), UpdateId, Toast.LENGTH_LONG).show();
-
                                     if (!(UpdateSaldo == null)) {
-
-                                       // Toast.makeText(getApplicationContext(), UpdateSaldo, Toast.LENGTH_LONG).show();
 
                                         String uri = url2 + UpdateCodigo;
 
@@ -400,8 +372,6 @@ public class MainActivity extends AppCompatActivity {
                                         String a ="$25000";
 
                                         manager.actualizarSaldo(objeto, UpdateId);
-                                        //c.close();
-                                        //cargarList();
                                     }
                                 }
                             }
@@ -415,13 +385,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String stringFromDoInBackground) {
 
-            //manager.actualizarSaldo(stringFromDoInBackground,UpdateId);
-            //manager.close();
-
             cargarList();
             Toast.makeText(getApplicationContext(),"Actualizacion de saldos exitosa!",Toast.LENGTH_LONG).show();
-
-
         }
     }
 }

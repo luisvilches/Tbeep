@@ -40,18 +40,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
 
-   JSONObject jsonObject;
-    double lat;
-    double lon;
+    String nombre,direccion;
+    double lat,lon;
     private JSONArray jsonArray;
-    String nombre;
-    String direccion;
-    String comuna;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -92,6 +84,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap = googleMap;
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ///// SE OBTIENEN LOS DATOS DESDE UN SERVICO REST Y SE CREAN LOS MARCADORES
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             //LLAMAMOS UN JSON DESDE UN URL
             String url = "http://datos.gob.cl/api/action/datastore_search?resource_id=cbd329c6-9fe6-4dc1-91e3-a99689fd0254";
@@ -142,24 +138,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }catch(Exception e){
                 e.printStackTrace();
             }
-
-
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            //////   SE OPTIENE LA POSICION EXACTA DEL GPS
+            /////////////////////////////////////////////////////////////////////////////////////////////
 
             // Android version is lesser than 6.0 or the permission is already granted.
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location gps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location net = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-
-            CameraUpdate center;
-            center = CameraUpdateFactory.newLatLng(new LatLng(locationGPS.getLatitude(), locationGPS.getLongitude()));
-            CameraUpdate zoom = CameraUpdateFactory.zoomTo(17);
-           // mMap.moveCamera(center);
-            mMap.animateCamera(zoom);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
+                    LatLng(gps.getLatitude(), gps.getLongitude()), 15));
             mMap.setMyLocationEnabled(true);
         }
     }
-
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////// CODIGO GENERADO POR ANDROID STUDIO DE FORMA AUTOMATICA
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void onStart() {
         super.onStart();

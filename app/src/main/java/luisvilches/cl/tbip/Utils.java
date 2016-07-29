@@ -18,7 +18,6 @@ public class Utils {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-
     }
 
     public static void enviarNotificacion(Context context, String mensaje , int drawableIcon ,Class<?> activity){

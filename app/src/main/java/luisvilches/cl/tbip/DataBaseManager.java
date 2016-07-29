@@ -73,21 +73,4 @@ public class DataBaseManager {
         helper.close();
     }
 
-    public ArrayList<Tarjeta> selectAllTarjetas() {
-
-        ArrayList<Tarjeta> listaDeTarjetas = new ArrayList<Tarjeta>();
-        Cursor c = cargarCursorTarjetas();
-        if (c.moveToFirst()) {
-            do {
-                Tarjeta tarjeta = new Tarjeta(c.getString(1),c.getString(3));
-
-                listaDeTarjetas.add(tarjeta);
-
-            }while (c.moveToNext());
-        }
-        c.close();
-        helper.close();
-
-        return listaDeTarjetas;
-    }
 }

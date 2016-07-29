@@ -36,7 +36,6 @@ public class SinConexion extends AppCompatActivity {
         }else{
 
             Toast.makeText(this, "Sin Coneccion a Internet", Toast.LENGTH_SHORT).show();
-
         }
     }
     @Override
