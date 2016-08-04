@@ -1,12 +1,15 @@
 package luisvilches.cl.tbip;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,21 +25,16 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
 
     TextView textSaldo,status;
     EditText tarjeta;
@@ -51,10 +49,6 @@ public class MainActivity extends AppCompatActivity {
     String[] from;
     int[] to;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -71,9 +65,11 @@ public class MainActivity extends AppCompatActivity {
 
         comprobarConexion();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+        }
+
     }
     /////////////////////////////////////////////////////////////////////////////////
     /////// FUNCION QUE CARGA EL LISTVIEW CON LOS REGISTROS DE LA DB
@@ -154,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SinConexion.class);
             startActivity(intent);
 
-        }else{
+        }else {
 
             Resources res = getResources();
 
@@ -173,11 +169,10 @@ public class MainActivity extends AppCompatActivity {
 
             tabs.setCurrentTab(0);
 
-            textSaldo.setText("Bienvenido!");
-            textSaldo.setTextSize(30);
+            textSaldo.setText("Ingrese el N° de la Tarjeta Bip! a consultar");
+            textSaldo.setTextSize(25);
 
             manager = new DataBaseManager(this);
-
             new ConsultaEnSegundoPlano().execute(url2);
             cargarList();
         }
@@ -268,45 +263,7 @@ public class MainActivity extends AppCompatActivity {
     }
     /////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////
-    @Override
-    public void onStart() {
-        super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://luisvilches.cl.tbip/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://luisvilches.cl.tbip/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////// INICIO TAREAS ASINCRONAS
@@ -386,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String stringFromDoInBackground) {
 
             cargarList();
-            Toast.makeText(getApplicationContext(),"Actualizacion de saldos exitosa!",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"Sincronizacion exitosa!",Toast.LENGTH_LONG).show();
         }
     }
 }

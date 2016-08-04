@@ -40,10 +40,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 100;
 
-    String nombre,direccion;
-    double lat,lon;
+    JSONObject jsonObject;
+    double lat;
+    double lon;
     private JSONArray jsonArray;
+    String nombre;
+    String direccion;
+    String comuna;
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
     private GoogleApiClient client;
 
     @Override
@@ -57,8 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-
     }
 
 
@@ -81,13 +87,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
 
-            mMap = googleMap;
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            ///// SE OBTIENEN LOS DATOS DESDE UN SERVICO REST Y SE CREAN LOS MARCADORES
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             //LLAMAMOS UN JSON DESDE UN URL
             String url = "http://datos.gob.cl/api/action/datastore_search?resource_id=cbd329c6-9fe6-4dc1-91e3-a99689fd0254";
@@ -126,35 +127,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     // Add a marker in Sydney and move the camera
                     LatLng marcador = new LatLng(lat, lon);
-                    mMap.addMarker(new MarkerOptions()
+                    googleMap.addMarker(new MarkerOptions()
                             .position(marcador)
                             .title(nombre)
                             .snippet(direccion)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.puntobip))
                     );
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(marcador));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(marcador));
 
                 }
             }catch(Exception e){
                 e.printStackTrace();
             }
-            /////////////////////////////////////////////////////////////////////////////////////////////
-            //////   SE OPTIENE LA POSICION EXACTA DEL GPS
-            /////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
             // Android version is lesser than 6.0 or the permission is already granted.
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location gps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Location net = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
-                    LatLng(gps.getLatitude(), gps.getLongitude()), 15));
-            mMap.setMyLocationEnabled(true);
+                    LatLng(locationGPS.getLatitude(), locationGPS.getLongitude()), 15));
+
+            googleMap.setMyLocationEnabled(true);
         }
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////// CODIGO GENERADO POR ANDROID STUDIO DE FORMA AUTOMATICA
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onStart() {
         super.onStart();

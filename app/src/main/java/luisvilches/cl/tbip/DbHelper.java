@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "tarjetas3.sqlite";
+    private static final String DB_NAME = "tarjetasDb.sqlite";
     private static final int DB_SCHEME_VERSION = 1;
 
     public DbHelper(Context context) {
